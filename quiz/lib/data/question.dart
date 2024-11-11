@@ -1,6 +1,6 @@
 import 'package:quiz/models/quiz_question.dart';
 
-const questions = [
+final questions = [
   QuizQuestion(
     'What is the capital of France?',
     ['Paris', 'Berlin', 'Madrid', 'London'],

@@ -1,38 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:quiz/answer_button.dart';
+import 'package:quiz/data/question.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/images/quiz2.png',
-            width: 300,
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1A237E),
+              Color(0xFF3949AB),
+            ],
           ),
-          const SizedBox(height: 20), // Add some spacing
-          const Text(
-            'Welcome to the Quiz!',
-            style: TextStyle(
-              fontSize: 32,
-              color: Colors.white,
-            ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/quiz2.png',
+                width: 300,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Welcome to the Quiz!',
+                style: TextStyle(
+                  fontSize: 32,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const QuestionScreen()),
+                  );
+                },
+                icon: const Icon(Icons.play_arrow),
+                label: const Text('Start'),
+              ),
+            ],
           ),
-          const SizedBox(height: 20), // Add some spacing
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const QuestionScreen()),
-              );
-            },
-            icon: const Icon(Icons.play_arrow), // Changed to play icon
-            label: const Text('Start'),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -45,55 +63,66 @@ class QuestionScreen extends StatefulWidget {
   State<QuestionScreen> createState() => _QuestionScreenState();
 }
 
-
 class _QuestionScreenState extends State<QuestionScreen> {
+  var currentQuestionIndex = 0;
+  answerQuestion() {
+    setState(() {
+      currentQuestionIndex++;
+    });
+    return currentQuestionIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final currentQuestion = questions[currentQuestionIndex];
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quiz Question'),
+        title: const Text('Quiz Question',
+            style: TextStyle(fontSize: 24, color: Colors.white)),
+        backgroundColor: const Color(0xFF1A237E),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Question .....',
-              style: TextStyle(
-                fontSize: 32,
-                color: Colors.black, 
-              ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1A237E),
+              Color(0xFF3949AB),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Container(
+            margin: const EdgeInsets.all(40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  currentQuestion.text,
+                  style: GoogleFonts.roboto(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ...currentQuestion.getShuffledAnswer().map((item) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: AnswerButton(
+                      onTap: () {
+                        answerQuestion();
+                      },
+                      answerText: item,
+                    ),
+                  );
+                }),
+              ],
             ),
-            const SizedBox(height: 20), 
-            ElevatedButton(
-              onPressed: () {
-                // Add code to handle 'True' answer
-              },
-              child: const Text('Text1'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Add code to handle 'True' answer
-              },
-              child: const Text('Text2'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Add code to handle 'True' answer
-              },
-              child: const Text('Text3'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Add code to handle 'True' answer
-              },
-              child: const Text('Text4'),
-            ),
-          ],
+          ),
         ),
       ),
     );
