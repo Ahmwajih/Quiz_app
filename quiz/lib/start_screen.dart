@@ -65,11 +65,19 @@ class QuestionScreen extends StatefulWidget {
 
 class _QuestionScreenState extends State<QuestionScreen> {
   var currentQuestionIndex = 0;
-  answerQuestion() {
-    setState(() {
-      currentQuestionIndex++;
-    });
-    return currentQuestionIndex;
+
+  void answerQuestion(String selectedAnswer) {
+    final currentQuestion = questions[currentQuestionIndex];
+    if (currentQuestion.isCorrectAnswer(selectedAnswer)) {
+      setState(() {
+        // Move to the next question or reset if at the end
+        if (currentQuestionIndex == questions.length - 1) {
+          currentQuestionIndex = 0;
+        } else {
+          currentQuestionIndex++;
+        }
+      });
+    }
   }
 
   @override
@@ -114,7 +122,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: AnswerButton(
                       onTap: () {
-                        answerQuestion();
+                        answerQuestion(item); // Pass selected answer
                       },
                       answerText: item,
                     ),
